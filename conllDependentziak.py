@@ -26,11 +26,25 @@ def getIndependentVs (linev):
     return resV, vocV
 
 import sys
-marraztekoak,hiztegiak = getIndependentVs(readConllFile(sys.argv[1]))
-#print len(marraztekoak), len(hiztegiak)
-for ind, i in enumerate(marraztekoak):
-    print len(marraztekoak[ind]), len(hiztegiak[ind])
-for ind, i in enumerate(marraztekoak):
-    print marraztekoak[ind]
-    depGraphDot.paint (marraztekoak[ind], hiztegiak[ind], ind)
+esaldiIndependenteak,hiztegiIndependenteak = getIndependentVs(readConllFile(sys.argv[1]))
+#print len(esaldiIndependenteak), len(hiztegiIndependenteak)
+for ind, i in enumerate(esaldiIndependenteak):
+    print len(esaldiIndependenteak[ind]), len(hiztegiIndependenteak[ind])
 
+
+for ind, esaldi in enumerate(esaldiIndependenteak):
+    marrazteko={}
+    hiztegi={}
+    for hitz in esaldi:
+        wid=hitz[0]
+        word=hitz[1]
+        parent=hitz[2]
+        parentrel=hitz[3]
+        try:
+            marrazteko[str(parent)].append((wid, word, parentrel, parent))
+        except KeyError:
+            marrazteko[str(parent)]=[]
+            marrazteko[str(parent)].append((wid, word, parentrel, parent))
+        hiztegi[wid]=word
+    if len(hiztegi)>0:
+        depGraphDot.paint(marrazteko, hiztegi, "esaldi_"+str(ind))
